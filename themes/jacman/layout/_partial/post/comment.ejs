@@ -16,3 +16,20 @@
 <% if (theme.changyan_appid && page.comments){ %>
 <div id="SOHUCS" style="width: 95%;"></div>
 <% } %>
+<% if (theme.gitalk && theme.gitalk.enable){ %>
+<section id="gitalk-container" class="comment"></section>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID:  '<%= theme.gitalk.clientID %>',
+      clientSecret: '<%= theme.gitalk.clientSecret %>',
+      repo: '<%= theme.gitalk.repo %>',
+      id: window.location.pathname,
+      owner: '<%= theme.gitalk.owner %>',
+      admin: '<%= theme.gitalk.admin %>',
+      distractionFreeMode: '<%= theme.gitalk.distractionFreeMode %>',
+    });
+    gitalk.render('gitalk-container');
+  </script>
+<% } %>

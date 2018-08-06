@@ -8,8 +8,8 @@ subtitle: lam's blog
 description:
 keywords:
 author: lam 
-language:
-  timezone:
+language: zh-CN
+timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -82,4 +82,5 @@ stylus:
 deploy:
   type: git
   repo: https://github.com/icecoll/icecoll.github.io
+  branch: master
 

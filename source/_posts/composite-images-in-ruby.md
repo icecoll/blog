@@ -1,7 +1,7 @@
 ---
 title: composite images in ruby
 date: 2018-08-01 15:53:07
-tags:
+tags: ['ruby','mini_magick']
 ---
 
 ## 应用场景
@@ -42,5 +42,5 @@ composite_image()
 
 ```
 ## git demo
-[Goooooo](https://github.com/icecoll/blog-demos/tree/master/composite-images-in-ruby)
+传送门: [Goooooo](https://github.com/icecoll/blog-demos/tree/master/composite-images-in-ruby)
 
