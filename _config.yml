@@ -81,6 +81,6 @@ stylus:
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/icecoll/icecoll.github.io
+  repo: git@github.com:icecoll/blog.lianming.tk.git
   branch: master
 
