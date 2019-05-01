@@ -1,0 +1,483 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>composite images in ruby | blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="lam">
+    
+
+    
+    <meta name="description" content="应用场景  在一张宣传图片上加上二维码和自己的微信头像, 用到mini_magick这个gem即可. 代码123456789101112131415161718192021222324252627282930require &quot;mini_magick&quot;require &apos;net/http&apos;require &apos;tempfile&apos;def composite_image(qrcode_ticket=&quot;gQEn">
+<meta name="keywords" content="ruby,mini_magick">
+<meta property="og:type" content="article">
+<meta property="og:title" content="composite images in ruby">
+<meta property="og:url" content="http://blog.lianming.tk/2018/08/01/composite-images-in-ruby/index.html">
+<meta property="og:site_name" content="blog">
+<meta property="og:description" content="应用场景  在一张宣传图片上加上二维码和自己的微信头像, 用到mini_magick这个gem即可. 代码123456789101112131415161718192021222324252627282930require &quot;mini_magick&quot;require &apos;net/http&apos;require &apos;tempfile&apos;def composite_image(qrcode_ticket=&quot;gQEn">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-06T07:12:24.214Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="composite images in ruby">
+<meta name="twitter:description" content="应用场景  在一张宣传图片上加上二维码和自己的微信头像, 用到mini_magick这个gem即可. 代码123456789101112131415161718192021222324252627282930require &quot;mini_magick&quot;require &apos;net/http&apos;require &apos;tempfile&apos;def composite_image(qrcode_ticket=&quot;gQEn">
+
+    
+    <link rel="alternative" href="/atom.xml" title="blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="blog" title="blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="blog">blog</a></h1>
+				<h2 class="blog-motto">lam&#39;s blog</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:blog.lianming.tk">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/08/01/composite-images-in-ruby/" title="composite images in ruby" itemprop="url">composite images in ruby</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="lam" target="_blank" itemprop="author">lam</a>
+		
+  <p class="article-time">
+    <time datetime="2018-08-01T07:53:07.000Z" itemprop="datePublished"> 发表于 2018-08-01</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#应用场景"><span class="toc-number">1.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-demo"><span class="toc-number">3.</span> <span class="toc-text">git demo</span></a></li></ol>
+		
+		</div>
+		
+		<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>  在一张宣传图片上加上二维码和自己的微信头像, 用到mini_magick这个gem即可.</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span> <span class="string">"mini_magick"</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'net/http'</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">'tempfile'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">composite_image</span><span class="params">(qrcode_ticket=<span class="string">"gQEn8DwAAAAAAAAAAS5odHRwOi8vd2VpeGluLnFxLmNvbS9xLzAyd2RybG95cTNma2wxMDAwME0wMy0AAgRK9RhbAwQAAAAA"</span>)</span></span></span><br><span class="line">  qrcode_uri = URI(<span class="string">"https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=<span class="subst">#&#123;qrcode_ticket&#125;</span>"</span>)</span><br><span class="line">  res = Net::HTTP.get_response(qrcode_uri)</span><br><span class="line">  raise <span class="string">"get qrcode faild error "</span> <span class="keyword">unless</span> res.is_a?(Net::HTTPSuccess)</span><br><span class="line"></span><br><span class="line">  tmpfile = Tempfile.new(qrcode_ticket)</span><br><span class="line">  open(tmpfile.path, <span class="string">"wb"</span>) &#123; <span class="params">|file|</span> file.write(res.body) &#125;</span><br><span class="line"></span><br><span class="line">  profile_uri = URI(<span class="string">"http://thirdwx.qlogo.cn/mmopen/8StU3PHCdLkPhx9kGZM1AYf9Ou2kncJb1RCCYc3DGoBoapgtdqrSDAKWIq7oNUcekicmxfDoLok5Spicf9uG4G5ZwpkkuKoXRw/132"</span>)</span><br><span class="line">  profile_res = Net::HTTP.get_response(profile_uri)</span><br><span class="line">  raise <span class="string">"get qrcode faild error "</span> <span class="keyword">unless</span> profile_res.is_a?(Net::HTTPSuccess)</span><br><span class="line"></span><br><span class="line">  profile_image = Tempfile.new([<span class="string">"profile"</span>, <span class="string">'.jpg'</span>])</span><br><span class="line">  open(profile_image.path, <span class="string">"wb"</span>) &#123; <span class="params">|file|</span> file.write(profile_res.body) &#125;</span><br><span class="line"></span><br><span class="line">  MiniMagick::Tool::Convert.new <span class="keyword">do</span> <span class="params">|c|</span></span><br><span class="line">    c &lt;&lt; <span class="string">"monkey100.jpg"</span></span><br><span class="line">    c.merge! [tmpfile.path, <span class="string">"-geometry"</span>, <span class="string">"205x205+433+955"</span>, <span class="string">"-composite"</span>]  <span class="comment"># -geometry 选项指定大小和位置，这里只是设置了位置。</span></span><br><span class="line">    c.merge! [profile_image.path, <span class="string">"-geometry"</span>, <span class="string">"95x95+10+10"</span>, <span class="string">"-composite"</span>]</span><br><span class="line">    c.merge! [<span class="string">"-pointsize"</span>, <span class="string">"26"</span>, <span class="string">"-font"</span>, <span class="string">"./simfang.ttf"</span>, <span class="string">"-fill"</span>, <span class="string">"black"</span>, <span class="string">"-draw"</span>, <span class="string">"text 120,60 '安'"</span>]</span><br><span class="line">    c &lt;&lt; <span class="string">"out.jpg"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">composite_image()</span><br></pre></td></tr></table></figure>
+<h2 id="git-demo"><a href="#git-demo" class="headerlink" title="git demo"></a>git demo</h2><p>传送门: <a href="https://github.com/icecoll/blog-demos/tree/master/composite-images-in-ruby" target="_blank" rel="noopener">Goooooo</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/ruby/">ruby</a><a href="/tags/mini-magick/">mini_magick</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://blog.lianming.tk/2018/08/01/composite-images-in-ruby/" data-title="composite images in ruby | blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/08/06/给hexo加上gitalk/" title="给hexo加上gitalk">
+  <strong>上一篇：</strong><br/>
+  <span>
+  给hexo加上gitalk</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/06/29/录制网页/"  title="录制网页">
+ <strong>下一篇：</strong><br/> 
+ <span>录制网页
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+
+<section id="gitalk-container" class="comment"></section>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID:  'bf5e7ba4fdadaaed8147',
+      clientSecret: '81d0f7f2d6d7c5911e2f7086cdc44908fb4c9c56',
+      repo: 'blog.lianming.tk',
+      id: window.location.pathname,
+      owner: 'icecoll',
+      admin: 'icecoll',
+      distractionFreeMode: 'true',
+    });
+    gitalk.render('gitalk-container');
+  </script>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#应用场景"><span class="toc-number">1.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#git-demo"><span class="toc-number">3.</span> <span class="toc-text">git demo</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/ruby/" title="ruby">ruby<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mini-magick/" title="mini_magick">mini_magick<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/third-party/" title="third-party">third-party<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/electron/" title="electron">electron<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ffmpeg/" title="ffmpeg">ffmpeg<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://ruby-china.com" target="_blank" title="一个面向程序员交流分享的新一代社区">ruby-china</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="lam">lam</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-120905838-1', 'blog.lianming.tk');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

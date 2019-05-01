@@ -1,0 +1,474 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>阿里智能语音API校验 | blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="lam">
+    
+
+    
+    <meta name="description" content="应用场景调用阿里录音文件识别API时，需要在header中添加校验字符串，参考官网的node示例（传送门），以下给出ruby生成校验字符串的方法． 代码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152require(&quot;net/http&quot;)require(&apos;b">
+<meta name="keywords" content="ruby,third-party">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里智能语音API校验">
+<meta property="og:url" content="http://blog.lianming.tk/2018/08/10/阿里智能语音API校验/index.html">
+<meta property="og:site_name" content="blog">
+<meta property="og:description" content="应用场景调用阿里录音文件识别API时，需要在header中添加校验字符串，参考官网的node示例（传送门），以下给出ruby生成校验字符串的方法． 代码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152require(&quot;net/http&quot;)require(&apos;b">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-10T03:38:23.838Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="阿里智能语音API校验">
+<meta name="twitter:description" content="应用场景调用阿里录音文件识别API时，需要在header中添加校验字符串，参考官网的node示例（传送门），以下给出ruby生成校验字符串的方法． 代码12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152require(&quot;net/http&quot;)require(&apos;b">
+
+    
+    <link rel="alternative" href="/atom.xml" title="blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="blog" title="blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="blog">blog</a></h1>
+				<h2 class="blog-motto">lam&#39;s blog</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:blog.lianming.tk">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/08/10/阿里智能语音API校验/" title="阿里智能语音API校验" itemprop="url">阿里智能语音API校验</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="lam" target="_blank" itemprop="author">lam</a>
+		
+  <p class="article-time">
+    <time datetime="2018-08-10T03:11:58.000Z" itemprop="datePublished"> 发表于 2018-08-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#应用场景"><span class="toc-number">1.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
+		
+		</div>
+		
+		<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>调用阿里录音文件识别API时，需要在header中添加校验字符串，参考官网的node示例（<a href="https://help.aliyun.com/document_detail/30245.html?spm=a2c4g.11186623.2.4.2AZ7xc" target="_blank" rel="noopener">传送门</a>），以下给出ruby生成校验字符串的方法．</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span>(<span class="string">"net/http"</span>)</span><br><span class="line"><span class="keyword">require</span>(<span class="string">'base64'</span>)</span><br><span class="line"><span class="keyword">require</span>(<span class="string">'digest'</span>)</span><br><span class="line"><span class="keyword">require</span>(<span class="string">'json'</span>)</span><br><span class="line"><span class="keyword">require</span>(<span class="string">'openssl'</span>)</span><br><span class="line"></span><br><span class="line">app_id = <span class="string">'id'</span></span><br><span class="line">app_secret = <span class="string">"secret"</span></span><br><span class="line">params = &#123;<span class="string">"app_key"</span><span class="symbol">:<span class="string">"nls-service-telephone8khz"</span></span>,<span class="string">"enable_callback"</span><span class="symbol">:false</span>,<span class="string">"oss_link"</span><span class="symbol">:<span class="string">"http://aliyun-nls.oss.aliyuncs.com/asr/fileASR/examples/nls-sample.wav"</span></span>&#125;</span><br><span class="line"></span><br><span class="line">now = <span class="string">"Tue, 19 Dec 2017 07:43:40 GMT"</span> </span><br><span class="line"><span class="comment"># 使用GMT格式时间</span></span><br><span class="line"><span class="comment"># now = Time.now.gmtime.strftime("%a, %d %b %Y %T GMT")</span></span><br><span class="line"></span><br><span class="line">headers = &#123;</span><br><span class="line">  <span class="symbol">method:</span> <span class="string">'POST'</span>,</span><br><span class="line">  <span class="symbol">accept:</span> <span class="string">'application/json'</span>,</span><br><span class="line">  <span class="string">'content-type'</span>: <span class="string">'application/json'</span>,</span><br><span class="line">  <span class="symbol">date:</span> <span class="string">"<span class="subst">#&#123;now&#125;</span>"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">## step 1. 组stringToSign,注意这里不加urlpath</span></span><br><span class="line">string2sign = <span class="string">"POST"</span> + <span class="string">"\n"</span> + headers[<span class="symbol">:accept</span>] + <span class="string">"\n"</span> +</span><br><span class="line">  Digest::MD5.base64digest(params.to_json) + <span class="string">"\n"</span> + </span><br><span class="line">  headers[<span class="symbol">:<span class="string">"content-type"</span></span>] + <span class="string">"\n"</span> +</span><br><span class="line">  headers[<span class="symbol">:date</span>]</span><br><span class="line">puts string2sign <span class="comment">## =&gt; POST</span></span><br><span class="line">                 <span class="comment">##    application/json</span></span><br><span class="line">                 <span class="comment">##    0yo5NmJ4dReSHOxlItYpvA==</span></span><br><span class="line">                 <span class="comment">##    application/json</span></span><br><span class="line">                 <span class="comment">##    Tue, 19 Dec 2017 07:43:40 GMT</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## step 2. 加密[Signature = Base64( HMAC-SHA1( AccessSecret, UTF-8-Encoding-Of(StringToSign) ) )]</span></span><br><span class="line">digest = OpenSSL::Digest.new(<span class="string">'sha1'</span>)</span><br><span class="line">signature = Base64.encode64(OpenSSL::HMAC.digest(digest, app_secret, string2sign))</span><br><span class="line"></span><br><span class="line"><span class="comment">## step 3. 组authorization header [Authorization =  Dataplus AccessKeyId + ":" + Signature]</span></span><br><span class="line">auth_header = <span class="string">"Dataplus "</span> + app_id + <span class="string">":"</span> + signature</span><br><span class="line">puts auth_header <span class="comment">## =&gt; Dataplus id:oqoyn3Y1/cPpK2DfU5jy2DbaKws=</span></span><br><span class="line"></span><br><span class="line">uri = URI(<span class="string">"https://nlsapi.aliyun.com/transcriptions"</span>)</span><br><span class="line">response = Net::HTTP.start(uri.host, uri.port, <span class="symbol">use_ssl:</span> uri.scheme == <span class="string">'https'</span>) <span class="keyword">do</span> <span class="params">|http|</span></span><br><span class="line">  request = Net::HTTP::Post.new(uri, &#123;<span class="string">'Accept'</span> =&gt; <span class="string">'application/json'</span>,</span><br><span class="line">                                      <span class="string">'Content-type'</span> =&gt; <span class="string">'application/json'</span>,</span><br><span class="line">                                      <span class="string">'Date'</span> =&gt; <span class="string">"<span class="subst">#&#123;now&#125;</span>"</span>,</span><br><span class="line">                                      <span class="string">'Authorization'</span> =&gt; <span class="string">"<span class="subst">#&#123;auth_header&#125;</span>"</span>&#125;)</span><br><span class="line">  request.body = params.to_json</span><br><span class="line">  http.request request</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">puts response.body</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/ruby/">ruby</a><a href="/tags/third-party/">third-party</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://blog.lianming.tk/2018/08/10/阿里智能语音API校验/" data-title="阿里智能语音API校验 | blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2018/08/06/给hexo加上gitalk/"  title="给hexo加上gitalk">
+ <strong>下一篇：</strong><br/> 
+ <span>给hexo加上gitalk
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+
+<section id="gitalk-container" class="comment"></section>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID:  'bf5e7ba4fdadaaed8147',
+      clientSecret: '81d0f7f2d6d7c5911e2f7086cdc44908fb4c9c56',
+      repo: 'blog.lianming.tk',
+      id: window.location.pathname,
+      owner: 'icecoll',
+      admin: 'icecoll',
+      distractionFreeMode: 'true',
+    });
+    gitalk.render('gitalk-container');
+  </script>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#应用场景"><span class="toc-number">1.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/ruby/" title="ruby">ruby<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mini-magick/" title="mini_magick">mini_magick<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/third-party/" title="third-party">third-party<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/electron/" title="electron">electron<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ffmpeg/" title="ffmpeg">ffmpeg<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://ruby-china.com" target="_blank" title="一个面向程序员交流分享的新一代社区">ruby-china</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="lam">lam</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-120905838-1', 'blog.lianming.tk');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

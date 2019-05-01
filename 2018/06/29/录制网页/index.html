@@ -1,0 +1,499 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>录制网页 | blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="lam">
+    
+
+    
+    <meta name="description" content="应用场景在做一个在线教育项目的时候，有一个需求是要求对页面进行录制，有很多在线教育或者视频直播服务提供商基本都是在服务器端录制的，有一些支持客户端录制的基本也是采用的BS架构，很少有直接在网页进行的，应该是网页录制不稳定因素比较多，比如说对客户端硬件的要求，页面刷新带来的影响等等．但我还是做了一些尝试． 方案 RecordRTC Chrome tabCapture Electron desktop">
+<meta name="keywords" content="electron,ffmpeg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="录制网页">
+<meta property="og:url" content="http://blog.lianming.tk/2018/06/29/录制网页/index.html">
+<meta property="og:site_name" content="blog">
+<meta property="og:description" content="应用场景在做一个在线教育项目的时候，有一个需求是要求对页面进行录制，有很多在线教育或者视频直播服务提供商基本都是在服务器端录制的，有一些支持客户端录制的基本也是采用的BS架构，很少有直接在网页进行的，应该是网页录制不稳定因素比较多，比如说对客户端硬件的要求，页面刷新带来的影响等等．但我还是做了一些尝试． 方案 RecordRTC Chrome tabCapture Electron desktop">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-17T04:29:39.984Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="录制网页">
+<meta name="twitter:description" content="应用场景在做一个在线教育项目的时候，有一个需求是要求对页面进行录制，有很多在线教育或者视频直播服务提供商基本都是在服务器端录制的，有一些支持客户端录制的基本也是采用的BS架构，很少有直接在网页进行的，应该是网页录制不稳定因素比较多，比如说对客户端硬件的要求，页面刷新带来的影响等等．但我还是做了一些尝试． 方案 RecordRTC Chrome tabCapture Electron desktop">
+
+    
+    <link rel="alternative" href="/atom.xml" title="blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="blog" title="blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="blog">blog</a></h1>
+				<h2 class="blog-motto">lam&#39;s blog</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:blog.lianming.tk">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/06/29/录制网页/" title="录制网页" itemprop="url">录制网页</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="lam" target="_blank" itemprop="author">lam</a>
+		
+  <p class="article-time">
+    <time datetime="2018-06-29T09:48:28.000Z" itemprop="datePublished"> 发表于 2018-06-29</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#应用场景"><span class="toc-number">1.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方案"><span class="toc-number">2.</span> <span class="toc-text">方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关代码"><span class="toc-number">3.</span> <span class="toc-text">相关代码</span></a></li></ol>
+		
+		</div>
+		
+		<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>在做一个在线教育项目的时候，有一个需求是要求对页面进行录制，有很多在线教育或者视频直播服务提供商基本都是在服务器端录制的，<br>有一些支持客户端录制的基本也是采用的BS架构，很少有直接在网页进行的，应该是网页录制不稳定因素比较多，比如说对客户端硬件的<br>要求，页面刷新带来的影响等等．但我还是做了一些尝试．</p>
+<h3 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h3><ul>
+<li><a href="https://github.com/muaz-khan/RecordRTC" target="_blank" rel="noopener">RecordRTC</a></li>
+<li><a href="https://developer.chrome.com/extensions/tabCapture" target="_blank" rel="noopener">Chrome tabCapture</a></li>
+<li><a href="https://electronjs.org/docs/api/desktop-capturer" target="_blank" rel="noopener">Electron desktopCapture</a></li>
+<li><a href="https://trac.ffmpeg.org/wiki/Capture/Desktop" target="_blank" rel="noopener">FFMPEG</a></li>
+</ul>
+<p>前面三种方案都用到了WebRTC,试了一下Electron提供的desktopCapture,发现用这种方法是无法获取系统输出设备(耳机，扬声器)声音的，参考github上<a href="https://github.com/electron/electron/issues/4776" target="_blank" rel="noopener">这个issue</a>.也就是用WebRTC的getUserMedia方法都会有这个毛病．但是有些chrome的插件，像<a href="https://chrome.google.com/webstore/detail/recordrtc/ndcljioonkecdnaaihodjgiliohngojp" target="_blank" rel="noopener">RecordRTC</a>，<a href="https://chrome.google.com/webstore/detail/screencastify-screen-vide/mmeijimgabbpbgpdklnllpncmdofkcpn" target="_blank" rel="noopener">Screencastify</a>这些是可以录制耳机声音的,应该是做了一些扩展（RecordRTC是开源的，有空可以看看）．<br>ffmpeg提供了捕获桌面的方法,试了一下windows下，可以捕获指定的窗口，效果还可以，就是CPU占用率有点高．</p>
+<h3 id="相关代码"><a href="#相关代码" class="headerlink" title="相关代码"></a>相关代码</h3><ul>
+<li>Electron desktopCapture<br>用这种方法的时候，如果只录制单独窗口，无法录制声音(<a href="https://electronjs.org/docs/api/desktop-capturer" target="_blank" rel="noopener">参考</a>)<blockquote>
+<p>To capture video from a source provided by desktopCapturer the constraints passed to navigator.mediaDevices.getUserMedia must include chromeMediaSource: ‘desktop’, and audio: false.</p>
+</blockquote>
+</li>
+</ul>
+<p>这样的话如果要获取页面上的<code>video/audio</code>元素的音频，可以尝试用<code>captureStream</code>方法获取元素的流，然后从中提取音轨，再用Web Audio Api将其混合．<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">startRecord</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  electron.desktopCapturer.getSources(&#123;<span class="attr">types</span>: [<span class="string">'window'</span>, <span class="string">'screen'</span>]&#125;, (error, sources) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (error) <span class="keyword">throw</span> error</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; sources.length; ++i) &#123;</span><br><span class="line">      <span class="keyword">if</span> (sources[i].name === <span class="string">"foo"</span>) &#123;</span><br><span class="line">        navigator.mediaDevices.getUserMedia(&#123;</span><br><span class="line">          audio: <span class="literal">false</span>,</span><br><span class="line">          video: &#123;</span><br><span class="line">            mandatory: &#123;</span><br><span class="line">              chromeMediaSource: <span class="string">'desktop'</span>,</span><br><span class="line">              chromeMediaSourceId: sources[i].id,</span><br><span class="line">              minWidth: <span class="number">1280</span>,</span><br><span class="line">              maxWidth: <span class="number">1280</span>,</span><br><span class="line">              minHeight: <span class="number">720</span>,</span><br><span class="line">              maxHeight: <span class="number">720</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;).then(<span class="function">(<span class="params">stream</span>) =&gt;</span> handleStream(stream))</span><br><span class="line">        .catch(<span class="function">(<span class="params">e</span>) =&gt;</span> handleError(e))</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">handleStream</span>(<span class="params">stream</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//需要electron desktopCapture录制指定窗口的话，无法录制声音，所以再次调用getUserMedia获取声音</span></span><br><span class="line">  navigator.mediaDevices.getUserMedia(&#123;<span class="attr">audio</span>: <span class="literal">true</span>, <span class="attr">video</span>: <span class="literal">false</span>&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">mediaStream</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> audioTracks = mediaStream.getAudioTracks();</span><br><span class="line">    <span class="comment">//add video and audio sound</span></span><br><span class="line">    <span class="comment">// 获取页面元素video和audio</span></span><br><span class="line">    <span class="keyword">var</span> medias = $(<span class="string">"audio,video"</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; medias.length; i++) &#123;</span><br><span class="line">      <span class="comment">//这里需要在创建BrowserWindow对象的时候将experimentalFeatures设置为true，否则无法调用captureStream</span></span><br><span class="line">      <span class="keyword">var</span> tmpStream = medias[i].captureStream();  <span class="comment">// mainWindow = new BrowserWindow(&#123;webPreferences: &#123;experimentalFeatures: true&#125; &#125;)</span></span><br><span class="line">      <span class="keyword">if</span>(tmpStream) &#123;</span><br><span class="line">        <span class="comment">//获取音轨</span></span><br><span class="line">        <span class="keyword">var</span> tmpTrack = tmpStream.getAudioTracks()[<span class="number">0</span>];</span><br><span class="line">        audioTracks.push(tmpTrack);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// mix audio tracks</span></span><br><span class="line">    <span class="comment">//将音轨加入stream</span></span><br><span class="line">    <span class="keyword">if</span>(audioTracks.length &gt; <span class="number">0</span>)&#123;</span><br><span class="line">      <span class="keyword">var</span> mixAudioTrack = mixTracks(audioTracks);</span><br><span class="line">      stream.addTrack(mixAudioTrack);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stream.addTrack(audioTrack);</span><br><span class="line">    recorder = <span class="keyword">new</span> MediaRecorder(stream);</span><br><span class="line">    recorder.ondataavailable = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</span><br><span class="line">        <span class="comment">// deal with your stream</span></span><br><span class="line">    &#125;;</span><br><span class="line">    recorder.start(<span class="number">1000</span>);</span><br><span class="line">  &#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">err</span>) </span>&#123;</span><br><span class="line">  <span class="comment">//console.log("handle stream error");</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//用Web Audio Api合成将音轨混合，因为如果有多个音轨的话，最终录制的视频中默认只取第一条．</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mixTracks</span>(<span class="params">tracks</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ac = <span class="keyword">new</span> AudioContext();</span><br><span class="line">  <span class="keyword">var</span> dest = ac.createMediaStreamDestination();</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;tracks.length;i++) &#123;</span><br><span class="line">    <span class="keyword">const</span> source = ac.createMediaStreamSource(<span class="keyword">new</span> MediaStream([tracks[i]]));</span><br><span class="line">      source.connect(dest);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> dest.stream.getTracks()[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>FFMPEG<br>这种方法的好处是可以结合electron的线程机制（ipcMain/ipcRenderer），使录制在单独的线程中进行，从而不受网页刷新的影响．<br>ffmpeg在不同操作系统中使用的命令不一样，以下是windows的尝试．<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> electron = <span class="built_in">require</span>(<span class="string">'electron'</span>)</span><br><span class="line"><span class="keyword">const</span> app = electron.app</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ffmpegPath = <span class="built_in">require</span>(<span class="string">'ffmpeg-static'</span>);</span><br><span class="line"><span class="keyword">const</span> ffdevices = <span class="built_in">require</span>(<span class="string">'ffdevices'</span>);</span><br><span class="line"><span class="keyword">const</span> child_process = <span class="built_in">require</span>(<span class="string">'child_process'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>)</span><br><span class="line"><span class="keyword">const</span> userDataPath = app.getPath(<span class="string">"userData"</span>);</span><br><span class="line"><span class="keyword">const</span> recordPath = path.join(userDataPath, <span class="string">'records'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(ffmpegPath.path);</span><br><span class="line">ffdevices.ffmpegPath = ffmpegPath.path;</span><br><span class="line">ffdevices.gdigrab = <span class="literal">false</span>;</span><br><span class="line">AppCapture = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> ctx = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.captureProcess = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">this</span>.fileName = <span class="literal">null</span></span><br><span class="line">  <span class="keyword">this</span>.isCapturing = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.setFile = <span class="function"><span class="keyword">function</span>(<span class="params">fileName</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.fileName = fileName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.startCapture = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'enter start capture'</span>);</span><br><span class="line">    ffdevices.getAll(<span class="function"><span class="keyword">function</span>(<span class="params">error, devices</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(!error) &#123;</span><br><span class="line">        <span class="keyword">var</span> args = [];</span><br><span class="line">        <span class="keyword">var</span> audioCount = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加音频设备</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;devices.length;i++) &#123;</span><br><span class="line">          <span class="keyword">if</span>(devices[i].type == <span class="string">'audio'</span> &amp;&amp; devices[i].deviceType == <span class="string">'dshow'</span>)&#123;</span><br><span class="line"></span><br><span class="line">            audioCount = audioCount + <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">var</span> audioArgs = [<span class="string">'-f'</span>, <span class="string">'dshow'</span>, <span class="string">'-i'</span>, <span class="string">`audio=<span class="subst">$&#123;devices[i].name&#125;</span>`</span>];</span><br><span class="line">            args = args.concat(audioArgs);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//创建保存路径</span></span><br><span class="line">        <span class="keyword">if</span> (!fs.existsSync(recordPath))&#123;</span><br><span class="line">          fs.mkdirSync(recordPath);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//这里-q:v -q:a表示视频的质量，值越底，质量越高，详见ffmpeg文档</span></span><br><span class="line">        <span class="keyword">var</span> fullPathName = path.join(recordPath, ctx.fileName);</span><br><span class="line">        <span class="keyword">var</span> videoArgs = [</span><br><span class="line">            <span class="string">'-y'</span>,</span><br><span class="line">            <span class="string">'-f'</span>, <span class="string">'gdigrab'</span>,</span><br><span class="line">            <span class="string">'-i'</span>, <span class="string">'title=monkey100'</span>,</span><br><span class="line">            <span class="string">'-framerate'</span>, <span class="string">'100'</span>,</span><br><span class="line">            <span class="string">'-vf'</span>, <span class="string">"fps=30"</span>, </span><br><span class="line">            <span class="string">'-video_size'</span>, <span class="string">'720x480'</span>,</span><br><span class="line">            <span class="string">'-q:v'</span>, <span class="string">'10'</span>,</span><br><span class="line">            <span class="string">'-q:a'</span>, <span class="string">'100'</span>,</span><br><span class="line">            <span class="string">'-draw_mouse'</span>, <span class="string">'1'</span>,</span><br><span class="line">            <span class="string">'-t'</span>, <span class="string">'00:20:00'</span>, <span class="comment">//max duration 20 miunites</span></span><br><span class="line">            fullPathName</span><br><span class="line">        ];</span><br><span class="line">        args = args.concat(videoArgs);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(audioCount &gt; <span class="number">1</span>) &#123;</span><br><span class="line">          <span class="keyword">var</span> filter_complex_arg = <span class="string">''</span>;</span><br><span class="line">          <span class="keyword">for</span>(<span class="keyword">var</span> j=<span class="number">0</span>;j&lt;audioCount;j++) &#123;</span><br><span class="line">            filter_complex_arg += <span class="string">`[<span class="subst">$&#123;j&#125;</span>:a]`</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          filter_complex_arg += <span class="string">` amerge=inputs=<span class="subst">$&#123;audioCount&#125;</span>`</span>;</span><br><span class="line">          args = args.concat([</span><br><span class="line">            <span class="string">'-filter_complex'</span>, filter_complex_arg,</span><br><span class="line">            <span class="comment">//"-c:a", "pcm_s16le"</span></span><br><span class="line">            <span class="string">'-map'</span>, <span class="string">`<span class="subst">$&#123;audioCount&#125;</span>`</span>,</span><br><span class="line">            <span class="string">'-map'</span>, <span class="string">'[a]'</span></span><br><span class="line">          ]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'start recording'</span>);</span><br><span class="line">        ctx.captureProcess = child_process.spawn(ffmpegPath.path, args);</span><br><span class="line">        ctx.isCapturing = <span class="literal">true</span>;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'recording started'</span>);</span><br><span class="line"></span><br><span class="line">        ctx.captureProcess.stderr.on(<span class="string">'data'</span>, (data) =&gt; &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">`error: <span class="subst">$&#123;data&#125;</span>`</span>);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// 15 minutes</span></span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">          ctx.stopCapture();</span><br><span class="line">        &#125;, <span class="number">1000</span> * <span class="number">60</span> * <span class="number">15</span>);</span><br><span class="line"></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">`get devices error: <span class="subst">$&#123;error&#125;</span>`</span>);</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.stopCapture = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'stoping'</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">this</span>.isCapturing &amp;&amp; <span class="keyword">this</span>.captureProcess)&#123;</span><br><span class="line">      <span class="comment">//停止录制</span></span><br><span class="line">      <span class="keyword">this</span>.captureProcess.stdin.write(<span class="string">'q'</span>);</span><br><span class="line">      <span class="keyword">this</span>.isCapturing = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports= AppCapture;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/electron/">electron</a><a href="/tags/ffmpeg/">ffmpeg</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://blog.lianming.tk/2018/06/29/录制网页/" data-title="录制网页 | blog" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/08/01/composite-images-in-ruby/" title="composite images in ruby">
+  <strong>上一篇：</strong><br/>
+  <span>
+  composite images in ruby</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/06/17/hello-world/"  title="Hello World">
+ <strong>下一篇：</strong><br/> 
+ <span>Hello World
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+
+<section id="gitalk-container" class="comment"></section>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    var gitalk = new Gitalk({
+      clientID:  'bf5e7ba4fdadaaed8147',
+      clientSecret: '81d0f7f2d6d7c5911e2f7086cdc44908fb4c9c56',
+      repo: 'blog.lianming.tk',
+      id: window.location.pathname,
+      owner: 'icecoll',
+      admin: 'icecoll',
+      distractionFreeMode: 'true',
+    });
+    gitalk.render('gitalk-container');
+  </script>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#应用场景"><span class="toc-number">1.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方案"><span class="toc-number">2.</span> <span class="toc-text">方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关代码"><span class="toc-number">3.</span> <span class="toc-text">相关代码</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/ruby/" title="ruby">ruby<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mini-magick/" title="mini_magick">mini_magick<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/third-party/" title="third-party">third-party<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/electron/" title="electron">electron<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ffmpeg/" title="ffmpeg">ffmpeg<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://ruby-china.com" target="_blank" title="一个面向程序员交流分享的新一代社区">ruby-china</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p>  <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2018 
+		
+		<a href="/about" target="_blank" title="lam">lam</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-120905838-1', 'blog.lianming.tk');  
+ga('send', 'pageview');
+</script>
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
