@@ -4,16 +4,17 @@
 
 # Site
 title: blog
-subtitle: lam's blog
+subtitle: lianming's blog
 description:
 keywords:
-author: lam 
+author: lianming 
 language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.lianming.tk
+# url: http://blog.lianming.tk
+url: https://icecoll.herokuapp.com/
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -79,8 +80,11 @@ stylus:
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
+# deploy:
+#   type: git
+#   repo: git@github.com:icecoll/blog.lianming.tk.git
+#   branch: master
 deploy:
-  type: git
-  repo: git@github.com:icecoll/blog.lianming.tk.git
-  branch: master
+  type: heroku
+  repo: https://git.heroku.com/icecoll.git
 
