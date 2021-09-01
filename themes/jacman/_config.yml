@@ -95,7 +95,7 @@ gitalk:
   enable: true
   clientID: 'bf5e7ba4fdadaaed8147'
   clientSecret: '81d0f7f2d6d7c5911e2f7086cdc44908fb4c9c56'
-  repo: 'blog.lianming.tk'
+  repo: 'icecoll.herokuapp.com'
   owner: 'icecoll'
   admin: ['icecoll']
   distractionFreeMode: 'true'
@@ -111,7 +111,7 @@ jiathis:
 google_analytics:
   enable: true
   id: UA-120905838-1     ## e.g. UA-46321946-2 your google analytics ID.
-  site: blog.lianming.tk ## e.g. wuchong.me your google analytics site or set the value as auto.
+  site: icecoll.herokuapp.com ## e.g. wuchong.me your google analytics site or set the value as auto.
 ## You MUST upgrade to Universal Analytics first!
 ## https://developers.google.com/analytics/devguides/collection/upgrade/?hl=zh_CN
 baidu_tongji:
